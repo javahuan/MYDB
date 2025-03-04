@@ -18,7 +18,7 @@ public interface TransactionManager {
     boolean isCommitted(long xid);
     boolean isAborted(long xid);
     void close();
-
+    //创建一个xid文件，并创建TM
     public static TransactionManagerImpl create(String path) {
         File f = new File(path+TransactionManagerImpl.XID_SUFFIX);
         try {
@@ -38,7 +38,7 @@ public interface TransactionManager {
             raf = new RandomAccessFile(f, "rw");
             fc = raf.getChannel();
         } catch (FileNotFoundException e) {
-           Panic.panic(e);
+            Panic.panic(e);
         }
 
         // 写空XID文件头
@@ -49,10 +49,10 @@ public interface TransactionManager {
         } catch (IOException e) {
             Panic.panic(e);
         }
-        
+
         return new TransactionManagerImpl(raf, fc);
     }
-
+    //从一个已有的xid文件来创建TM
     public static TransactionManagerImpl open(String path) {
         File f = new File(path+TransactionManagerImpl.XID_SUFFIX);
         if(!f.exists()) {
